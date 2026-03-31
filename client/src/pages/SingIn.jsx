@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-export default function SignUp() {
+export default function SignIn() {
   const [formData, setFormData] = useState({});
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -21,7 +21,7 @@ export default function SignUp() {
     // to the api side we need to use a proxy configured in vite.config.js
     try {
       setLoading(true);
-      const res = await fetch("/api/auth/signup", {
+      const res = await fetch("/api/auth/signin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -48,13 +48,6 @@ export default function SignUp() {
       <h1 className="text-3xl font-semibold my-7">Sign Up</h1>
       <form onSubmit={handleSubmit} className="flex flex-col mx-2 gap-4">
         <input
-          type="text"
-          placeholder="username"
-          className="border p-3 rounded-lg bg-white"
-          id="username"
-          onChange={handdleChange}
-        />
-        <input
           type="email"
           placeholder="email"
           className="border p-3 rounded-lg bg-white"
@@ -77,13 +70,13 @@ export default function SignUp() {
           disabled:opacity-80
           disabled={loading} "
         >
-          {loading ? "Loading...." : "Sign Up"}
+          {loading ? "Loading...." : "Sign In"}
         </button>
       </form>
       <div className="flex justify-center gap-2 mt-5">
-        <p>Already have an account?</p>
-        <Link to={"/signin"}>
-          <span className="text-blue-700">Sign In</span>
+        <p>Don't have an account?</p>
+        <Link to={"/signup"}>
+          <span className="text-blue-700">Sign Up</span>
         </Link>
       </div>
       <div>{error && <p className="text-red-500">{error}</p>}</div>
