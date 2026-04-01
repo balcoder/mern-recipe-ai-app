@@ -5,19 +5,11 @@ import { persistReducer, persistStore } from "redux-persist";
 // Safe storage that works well with Vite
 import createWebStorage from "redux-persist/es/storage/createWebStorage";
 
-const createNoopStorage = () => {
-  return {
-    getItem(_key) {
-      return Promise.resolve(null);
-    },
-    setItem(_key, value) {
-      return Promise.resolve(value);
-    },
-    removeItem(_key) {
-      return Promise.resolve();
-    },
-  };
-};
+const createNoopStorage = () => ({
+  getItem: () => Promise.resolve(null),
+  setItem: (_key, value) => Promise.resolve(value),
+  removeItem: () => Promise.resolve(),
+});
 
 // This prevents errors during build / SSR-like behavior in Vite
 const storage =
