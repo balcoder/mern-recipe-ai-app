@@ -22,6 +22,13 @@ const port = 3000;
 // allow server to accept json
 app.use(express.json());
 
+app.get("/", (req, res) => {
+  res.send("Hello from api/index.js");
+});
+
+app.use("/api/user", userRouter);
+app.use("/api/auth", authRouter);
+
 // middleware for handling errors
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
@@ -32,13 +39,6 @@ app.use((err, req, res, next) => {
     message,
   });
 });
-
-app.get("/", (req, res) => {
-  res.send("Hello from api/index.js");
-});
-
-app.use("/api/user", userRouter);
-app.use("/api/auth", authRouter);
 
 app.listen(port, () => {
   console.log(`Express Server running on port ${port}!!!`);
