@@ -1,44 +1,50 @@
-import { configureStore } from "@reduxjs/toolkit";
-import userReducer from "./user/userSlice";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import userReducer from "./user/userSlice.js";
+import { persistReducer, persistStore } from "redux-persist";
+
+// Safe storage that works well with Vite
+import createWebStorage from "redux-persist/es/storage/createWebStorage";
+
+const createNoopStorage = () => {
+  return {
+    getItem(_key) {
+      return Promise.resolve(null);
+    },
+    setItem(_key, value) {
+      return Promise.resolve(value);
+    },
+    removeItem(_key) {
+      return Promise.resolve();
+    },
+  };
+};
+
+// This prevents errors during build / SSR-like behavior in Vite
+const storage =
+  typeof window !== "undefined"
+    ? createWebStorage("local") // real localStorage on client
+    : createNoopStorage(); // dummy storage otherwise
+
+const rootReducer = combineReducers({
+  user: userReducer,
+});
+
+const persistConfig = {
+  key: "root",
+  storage, // ← use the safe storage here
+  version: 1,
+  // Optional: only persist the user slice
+  // whitelist: ["user"],
+};
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
-  reducer: { user: userReducer },
-  // set serializableCheck to false so we don't get error for non
-  // serialized variables
+  reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
     }),
 });
 
-// // For more info on Redux State Slice see
-// // https://redux-toolkit.js.org/tutorials/quick-start
-
-// import { combineReducers, configureStore } from "@reduxjs/toolkit";
-// import userReducer from "./user/userSlice";
-// import { persistReducer } from "redux-persist";
-// import storage from "redux-persist/lib/storage";
-// import persistStore from "redux-persist/es/persistStore";
-
-// const rootReducer = combineReducers({ user: userReducer });
-
-// // persistConfig will set the name storage and version in local storage
-// const persistConfig = {
-//   key: "root",
-//   storage,
-//   version: 1,
-// };
-
-// const persistedReducer = persistReducer(persistConfig, rootReducer);
-// export const store = configureStore({
-//   reducer: persistedReducer,
-//   // set serializableCheck to false so we don't get error for non
-//   // serialized variables
-//   middleware: (getDefaultMiddleware) =>
-//     getDefaultMiddleware({
-//       serializableCheck: false,
-//     }),
-// });
-
-// // make the store persist
-// export const persistor = persistStore(store);
+export const persistor = persistStore(store);
