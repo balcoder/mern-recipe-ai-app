@@ -1,5 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
+import cookieParser from "cookie-parser";
 import { loadEnvFile } from "node:process";
 import userRouter from "./routes/user.route.js";
 import authRouter from "./routes/auth.route.js";
@@ -21,6 +22,8 @@ const port = 3000;
 
 // allow server to accept json
 app.use(express.json());
+// can get info from cookie in req.cookies.access_token
+app.use(cookieParser());
 
 app.get("/", (req, res) => {
   res.send("Hello from api/index.js");
