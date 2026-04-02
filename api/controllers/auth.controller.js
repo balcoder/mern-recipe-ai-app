@@ -47,6 +47,7 @@ export const signin = async (req, res, next) => {
 };
 
 export const google = async (req, res, next) => {
+  // req.body sent from client/src/components/OAuth.jsx
   try {
     const user = await User.findOne({ email: req.body.email });
     if (user) {
@@ -57,6 +58,8 @@ export const google = async (req, res, next) => {
         .status(200)
         .json(rest);
     } else {
+      // need to create random password for user signing up with
+      // google as password is required in our database.
       const generatedPassword =
         Math.random().toString(36).slice(-8) +
         Math.random().toString(36).slice(-8);

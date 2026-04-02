@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { FaSearch } from "react-icons/fa";
 
 export default function Header() {
-  // get just the currentUser property from state.user in redux store
+  // get just the currentUser property from state.user in redux store userSlice.js
   const { currentUser } = useSelector((state) => state.user);
   return (
     <header className="bg-slate-200 shadow-md">
@@ -25,16 +25,16 @@ export default function Header() {
             <li className=" sm:inline text-slate-700 hover:underline">About</li>
           </Link>
           <Link to="/profile">
-            {/* {currentUser ? ( */}
-            <img
-              className="rounded-full h-7 w-7 object-cover"
-              src="null" //{currentUser.avatar}
-              referrerPolicy="no-referrer"
-              alt="profile"
-            />
-            {/* ) : (
+            {currentUser ? (
+              <img
+                className="rounded-full h-7 w-7 object-cover"
+                src={currentUser.avatar}
+                referrerPolicy="no-referrer"
+                alt="profile"
+              />
+            ) : (
               <li className="text-slate-700 hover:underline ">SignIn</li>
-            )} */}
+            )}
           </Link>
         </ul>
       </div>
